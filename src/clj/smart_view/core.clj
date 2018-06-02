@@ -62,10 +62,14 @@
 (defn using-for-declaration-facts [part]
   [])
 
-(defn state-variable-declaration-facts [[_ & statements :as state-var]]
+(defn parse-variable [statements]
   (let [[_ [t v]] (some #(when (= (first %) :typeName) %) statements)
         vtype (if (= t :elementaryTypeName) v (second v))
-        vname (second (some #(when (= (first %) :identifier) %) statements))
+        vname (second (some #(when (= (first %) :identifier) %) statements))]
+    [vtype vname]))
+
+(defn state-variable-declaration-facts [[_ & statements :as state-var]]
+  (let [[vtype vname] (parse-variable statements)
         public? (some #(= % "public") statements)
         id (d/tempid :db.part/user)]
     (into
@@ -75,11 +79,37 @@
       [id :var/public? public?]]
      (token-facts id state-var))))
 
-(defn enum-definition-facts [part]
-  [])
+(defn enum-definition-facts [[_ & statements :as enum]]
+  (let [ename (second (some #(when (= (first %) :identifier) %) statements))
+        values (->> statements
+                    (keep (fn [[t v]]
+                            (when (= t :enumValue)
+                              (second v)))))
+        id (d/tempid :db.part/user)]
+    (-> [[*current-contract-id* :contract/enums id]
+         [id :enum/name ename]]
+        (into (map (fn [v] [id :enum/values v]) values))
+        (into (token-facts id enum)))))
 
-(defn struct-definition-facts [part]
-  [])
+
+
+(defn struct-definition-facts [[_ & statements :as struct]]
+  (let [sname (second (some #(when (= (first %) :identifier) %) statements))
+        sid (d/tempid :db.part/user)
+        vars-facts (->> statements
+                        (keep (fn [[t & vs]]
+                                (when (= t :variableDeclaration)
+                                  (let [[vtype vname] (parse-variable vs)
+                                        vid (d/tempid :db.part/user)]
+                                    [[sid :struct/vars vid]
+                                     [vid :var/type vtype]
+                                     [vid :var/name vname]]))))
+                        (reduce concat))]
+    vars-facts
+    (-> [[*current-contract-id* :contract/structs sid]
+         [sid :struct/name sname]]
+        (into vars-facts)
+        (into (token-facts sid struct)))))
 
 (defn modifier-definition-facts [part]
   [])
@@ -91,7 +121,7 @@
   (case part-type
     ;; :usingForDeclaration (using-for-declaration-facts part)
     :stateVariableDeclaration (state-variable-declaration-facts part)
-    ;; :enumDefinition (enum-definition-facts part)
+    :enumDefinition (enum-definition-facts part)
     ;; :structDefinition (struct-definition-facts part)
     ;; :modifierDefinition (modifier-definition-facts part)
     ;; :functionDefinition (function-definition-facts part)

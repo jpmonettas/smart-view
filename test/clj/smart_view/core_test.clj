@@ -63,3 +63,55 @@
             [temp-id-2 :token/column 1]]
            ))))
 
+
+(deftest enum-definition-facts-test 
+ (binding [*current-contract-id* -1]
+   (is (= (enum-definition-facts (with-meta
+                                   '(:enumDefinition
+                                     "enum"
+                                     (:identifier "VoteOption")
+                                     "{"
+                                     (:enumValue (:identifier "NoVote"))
+                                     ","
+                                     (:enumValue (:identifier "VoteFor"))
+                                     ","
+                                     (:enumValue (:identifier "VoteAgainst"))
+                                     "}")
+                                   {:clj-antlr/position {:row 1 :column 1}}))
+          [[-1 :contract/enums temp-id-1]
+           [temp-id-1 :enum/name "VoteOption"]
+           [temp-id-1 :enum/values "NoVote"]
+           [temp-id-1 :enum/values "VoteFor"]
+           [temp-id-1 :enum/values "VoteAgainst"]
+           [temp-id-1 :token/row 1]
+           [temp-id-1 :token/column 1]]))))
+
+(deftest struct-definition-facts-test
+  (binding [*current-contract-id* -1]
+    (is (= (struct-definition-facts (with-meta
+                                      '(:structDefinition
+                                        "struct"
+                                        (:identifier "Vote")
+                                        "{"
+                                        (:variableDeclaration
+                                         (:typeName (:elementaryTypeName "bytes32"))
+                                         (:identifier "secretHash"))
+                                        ";"
+                                        (:variableDeclaration
+                                         (:typeName (:userDefinedTypeName (:identifier "VoteOption")))
+                                         (:identifier "option"))
+                                        ";"
+                                        "}")
+                                      {:clj-antlr/position {:row 1 :column 1}}))
+           [[-1 :contract/structs temp-id-1]
+            [temp-id-1 :struct/name "Vote"]
+            [temp-id-1 :struct/vars temp-id-2]
+            [temp-id-2 :var/type "bytes32"]
+            [temp-id-2 :var/name "secretHash"]
+            [temp-id-1 :struct/vars temp-id-3]
+            [temp-id-3 :var/type "VoteOption"]
+            [temp-id-3 :var/name "option"]
+            [temp-id-1 :token/row 1]
+            [temp-id-1 :token/column 1]]))))
+
+
