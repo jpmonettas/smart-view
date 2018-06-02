@@ -284,6 +284,21 @@
   (pr-str @db-conn))
 
 (comment
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; All public functions ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (d/q '[:find ?file-name ?c-name ?fn-name
+         :where
+         [?file-id :file/name ?file-name]
+         [?c-id :contract/name ?c-name]
+         [?fn-id :function/name ?fn-name]
+         [?file-id :file/contracts ?c-id]
+         [?c-id :contract/functions ?fn-id]
+         [?fn-id :function/public? true]]
+       @db-conn)
+
   
   (re-index-all "/home/jmonetta/my-projects/district0x/memefactory/resources/public/contracts/src/")
 
