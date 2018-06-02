@@ -46,8 +46,8 @@
 
 (defn token-facts [ent-id token]
   (let [{:keys [row column]} (:clj-antlr/position (meta token))]
-   [[ent-id :token/row row]
-    [ent-id :token/column column]]))
+    [[ent-id :token/row row]
+     [ent-id :token/column column]]))
 
 (defn import-directive-facts [[_ _ file :as import]]
   (let [id (d/tempid :db.part/user)]
@@ -59,8 +59,14 @@
 (defn pragma-directive-facts [[_ _ _ [_ [_ [_ [_ version-op] version]]] :as pragma]]
   [[*current-file-id* :file/pragma-version (str version-op version)]])
 
-(defn using-for-declaration-facts [part]
-  [])
+(defn using-for-declaration-facts [[_ & statements :as using]]
+  (let [[utype uname] (parse-variable statements)
+        id (d/tempid :db.part/user)]
+    (into
+     [[*current-contract-id* :contract/using id]
+      [id :using/type uname]
+      [id :using/for-type utype]]
+     (token-facts id using))))
 
 (defn parse-variable [statements]
   (let [[_ [t v]] (some #(when (= (first %) :typeName) %) statements)
@@ -91,8 +97,6 @@
         (into (map (fn [v] [id :enum/values v]) values))
         (into (token-facts id enum)))))
 
-
-
 (defn struct-definition-facts [[_ & statements :as struct]]
   (let [sname (second (some #(when (= (first %) :identifier) %) statements))
         sid (d/tempid :db.part/user)
@@ -105,28 +109,49 @@
                                      [vid :var/type vtype]
                                      [vid :var/name vname]]))))
                         (reduce concat))]
-    vars-facts
     (-> [[*current-contract-id* :contract/structs sid]
          [sid :struct/name sname]]
         (into vars-facts)
         (into (token-facts sid struct)))))
 
-(defn modifier-definition-facts [part]
-  [])
+(defn modifier-definition-facts [[_ & statements :as modifier]]
+  (let [mname (second (some #(when (= (first %) :identifier) %) statements))
+        mid (d/tempid :db.part/user)]
+    (-> [[*current-contract-id* :contract/modifiers mid]
+         [mid :modifier/name mname]]
+        (into (token-facts mid modifier)))))
 
-(defn function-definition-facts [part]
-  [])
+(defn function-definition-facts [[_ & statements :as function]]
+  (let [fname (second (some #(when (= (first %) :identifier) %) statements))
+        fid (d/tempid :db.part/user)
+        plist (rest (some #(when (= (first %) :parameterList) %) statements))
+        public? (some #(and (= (first %) :modifierList) (= (second %) "public")) statements)
+        parameters-facts (->> plist
+                              (keep (fn [[t & vs]]
+                                      (when (= t :parameter)
+                                        (let [[vtype vname] (parse-variable vs)
+                                              vid (d/tempid :db.part/user)]
+                                          [[fid :function/vars vid]
+                                           [vid :var/type vtype]
+                                           [vid :var/name vname]
+                                           [vid :var/parameter? true]]))))
+                              (reduce concat))]
+    (-> [[*current-contract-id* :contract/functions fid]
+         [fid :function/name fname]
+         [fid :function/public? public?]]
+        (into parameters-facts)
+        (into (token-facts fid function)))))
 
 (defn contract-part-facts [[_ [part-type :as part]]]
   (case part-type
-    ;; :usingForDeclaration (using-for-declaration-facts part)
+    :usingForDeclaration (using-for-declaration-facts part)
     :stateVariableDeclaration (state-variable-declaration-facts part)
     :enumDefinition (enum-definition-facts part)
-    ;; :structDefinition (struct-definition-facts part)
-    ;; :modifierDefinition (modifier-definition-facts part)
-    ;; :functionDefinition (function-definition-facts part)
+    :structDefinition (struct-definition-facts part)
+    :modifierDefinition (modifier-definition-facts part)
+    :functionDefinition (function-definition-facts part)
     (do (println "Warning not doing anything with " part-type)
-                       [])))
+        [])))
 
 (defn contract-id-from-name [contract-name]
   -1)
@@ -155,11 +180,11 @@
                        []))))))
 
 #_(binding [*current-project-id* "memefactory-id"
-          *current-file-id* "RegistryEntry.sol-id"]
-  (source-unit-facts parsed))
+            *current-file-id* "RegistryEntry.sol-id"]
+    (source-unit-facts parsed))
 
 #_(-> (parse-solidity re-contract)
-    (analyze-contract-file))
+      (analyze-contract-file))
 
 
 (defn re-index-all

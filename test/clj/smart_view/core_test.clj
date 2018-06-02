@@ -115,3 +115,69 @@
             [temp-id-1 :token/column 1]]))))
 
 
+(deftest modifier-definition-facts-test
+  (binding [*current-contract-id* -1]
+    (is (= (modifier-definition-facts
+            (with-meta '(:modifierDefinition
+                         "modifier"
+                         (:identifier "notEmergency")
+                         (:parameterList "(" ")")
+                         )
+              {:clj-antlr/position {:row 1 :column 1}}))
+           [[-1 :contract/modifiers temp-id-1]
+            [temp-id-1 :modifier/name "notEmergency"]
+            [temp-id-1 :token/row 1]
+            [temp-id-1 :token/column 1]]))))
+
+(deftest function-definition-facts-test
+ (binding [*current-contract-id* -1]
+   (is (= (function-definition-facts
+           (with-meta
+             '(:functionDefinition
+               "function"
+               (:identifier "construct")
+               (:parameterList
+                "("
+                (:parameter
+                 (:typeName (:elementaryTypeName "address"))
+                 (:identifier "_creator"))
+                ","
+                (:parameter
+                 (:typeName (:elementaryTypeName "uint"))
+                 (:identifier "_version"))
+                ")")
+               (:modifierList "public"))
+             {:clj-antlr/position {:row 1 :column 1}}))
+          
+          [[-1 :contract/functions temp-id-1]
+           [temp-id-1 :function/name "construct"]
+           [temp-id-1 :function/public? true]
+           [temp-id-1 :function/vars temp-id-2]
+           [temp-id-2 :var/type "address"]
+           [temp-id-2 :var/name "_creator"]
+           [temp-id-2 :var/parameter? true]
+           [temp-id-1 :function/vars temp-id-3]
+           [temp-id-3 :var/type "uint"]
+           [temp-id-3 :var/name "_version"]
+           [temp-id-3 :var/parameter? true]
+           [temp-id-1 :token/row 1]
+           [temp-id-1 :token/column 1]]))))
+
+
+(deftest using-for-declaration-facts-test
+  (binding [*current-contract-id* -1]
+    (is (= (using-for-declaration-facts
+            (with-meta
+              '(:usingForDeclaration
+                "using"
+                (:identifier "SafeMath")
+                "for"
+                (:typeName (:elementaryTypeName "uint"))
+                ";")
+              {:clj-antlr/position {:row 1 :column 1}}))
+
+           [[-1 :contract/using temp-id-1]
+            [temp-id-1 :using/type "SafeMath"]
+            [temp-id-1 :using/for-type "uint"]
+            [temp-id-1 :token/row 1]
+            [temp-id-1 :token/column 1]]))))
