@@ -176,8 +176,42 @@
                 ";")
               {:clj-antlr/position {:row 1 :column 1}}))
 
-           [[-1 :contract/using temp-id-1]
+           [[-1 :contract/usings temp-id-1]
             [temp-id-1 :using/type "SafeMath"]
             [temp-id-1 :using/for-type "uint"]
             [temp-id-1 :token/row 1]
             [temp-id-1 :token/column 1]]))))
+
+(deftest contract-event-definition-facts-test
+  (binding [*current-contract-id* -1]
+    (is (= (contract-event-definition-facts
+            (with-meta
+              '(:eventDefinition
+                "event"
+                (:identifier "RegistryEntryEvent")
+                (:eventParameterList
+                 "("
+                 (:eventParameter
+                  (:typeName (:elementaryTypeName "address"))
+                  "indexed"
+                  (:identifier "registryEntry"))
+                 ","
+                 (:eventParameter
+                  (:typeName (:elementaryTypeName "bytes32"))
+                  "indexed"
+                  (:identifier "eventType")) 
+                 ")")
+                ";")
+              {:clj-antlr/position {:row 1 :column 1}}))
+
+           [[-1 :contract/events temp-id-1]
+            [temp-id-1 :event/name "RegistryEntryEvent"]
+            [temp-id-1 :event/vars temp-id-2]
+            [temp-id-2 :var/type "address"]
+            [temp-id-2 :var/name "registryEntry"]
+            [temp-id-1 :event/vars temp-id-3]
+            [temp-id-3 :var/type "bytes32"]
+            [temp-id-3 :var/name "eventType"]
+            [temp-id-1 :token/row 1]
+            [temp-id-1 :token/column 1]]))))
+
