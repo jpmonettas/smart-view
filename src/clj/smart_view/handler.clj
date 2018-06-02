@@ -30,11 +30,6 @@
        {:status 200
         :headers {"Content-Type" "application/edn"}
         :body (db-edn)})
-  (GET "/re-index-all" []
-       (let [folder "/home/jmonetta/my-projects/district0x"]
-         (re-index-all folder)
-         {:status 200
-          :body (str folder " re indexed.")}))
   (resources "/"))
 
 (def handler (-> #'routes

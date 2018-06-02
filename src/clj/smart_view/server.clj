@@ -7,6 +7,5 @@
 
 (defn -main [& [folder]]
   (let [port (Integer/parseInt (or (env :port) "3000"))]
-    (reset! core/projects-folder folder)
-    (core/re-index-all)
+    (core/re-index-all folder)
     (run-jetty handler {:port port :join? false})))
