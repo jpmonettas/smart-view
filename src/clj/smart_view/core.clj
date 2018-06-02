@@ -103,18 +103,16 @@
 
 (defn contract-definition-facts [[_ _ [_ contract-name] & r]]
   (binding [*current-contract-id* (contract-id-from-name contract-name)]
-    (let [inherits (when (= (first r) "is")
-                     (->> r second rest
-                          (map (fn [[_ [_ super-contract-name]]] super-contract-name))))
+    (let [inherits-facts (when (= (first r) "is")
+                           (->> r second rest
+                                (map (fn [[_ [_ super-cn]]]
+                                       [*current-contract-id* :contract/inherits (contract-id-from-name super-cn)]))))
           contract-parts (filter (fn [x] (= (first x) :contractPart)) r)
-          contract-facts (cond-> [[*current-contract-id* :contract/name contract-name]
-                                  [*current-file-id* :file/contracts *current-contract-id*]]
-                           (not-empty inherits) (into
-                                                 (map (fn [super-cn]
-                                                        [*current-contract-id* :contract/inherits (contract-id-from-name super-cn)])
-                                                      inherits)))]
-      (into contract-facts
-            (mapcat contract-part-facts contract-parts)))))
+          contract-facts [[*current-contract-id* :contract/name contract-name]
+                          [*current-file-id* :file/contracts *current-contract-id*]]]
+      (-> contract-facts
+          (into inherits-facts)
+          (into (mapcat contract-part-facts contract-parts))))))
 
 (defn source-unit-facts [[_ & source-unit-childs]]
   (->> source-unit-childs
