@@ -1,0 +1,2736 @@
+{:clj-antlr/position {:row 0, :column 0, :index 0}, :errors nil}
+
+(:sourceUnit
+ (:pragmaDirective
+  "pragma"
+  (:pragmaName (:identifier "solidity"))
+  (:pragmaValue
+   (:version (:versionConstraint (:versionOperator "^") "0.4.18")))
+  ";")
+ (:importDirective "import" "\"Registry.sol\"" ";")
+ (:importDirective "import" "\"proxy/Forwarder.sol\"" ";")
+ (:importDirective "import" "\"db/EternalDb.sol\"" ";")
+ (:importDirective "import" "\"token/minime/MiniMeToken.sol\"" ";")
+ (:importDirective "import" "\"math/SafeMath.sol\"" ";")
+ (:contractDefinition
+  "contract"
+  (:identifier "RegistryEntry")
+  "is"
+  (:inheritanceSpecifier
+   (:userDefinedTypeName (:identifier "ApproveAndCallFallBack")))
+  "{"
+  (:contractPart
+   (:usingForDeclaration
+    "using"
+    (:identifier "SafeMath")
+    "for"
+    (:typeName (:elementaryTypeName "uint"))
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:userDefinedTypeName (:identifier "Registry")))
+    "public"
+    "constant"
+    (:identifier "registry")
+    "="
+    (:expression
+     (:expression (:primaryExpression (:identifier "Registry")))
+     "("
+     (:functionCallArguments
+      (:expressionList
+       (:expression
+        (:primaryExpression
+         (:numberLiteral
+          "0xfEEDFEEDfeEDFEedFEEdFEEDFeEdfEEdFeEdFEEd")))))
+     ")")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:userDefinedTypeName (:identifier "MiniMeToken")))
+    "public"
+    "constant"
+    (:identifier "registryToken")
+    "="
+    (:expression
+     (:expression (:primaryExpression (:identifier "MiniMeToken")))
+     "("
+     (:functionCallArguments
+      (:expressionList
+       (:expression
+        (:primaryExpression
+         (:numberLiteral
+          "0xDeaDDeaDDeaDDeaDDeaDDeaDDeaDDeaDDeaDDeaD")))))
+     ")")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "bytes32"))
+    "public"
+    "constant"
+    (:identifier "challengePeriodDurationKey")
+    "="
+    (:expression
+     (:expression (:primaryExpression (:identifier "sha3")))
+     "("
+     (:functionCallArguments
+      (:expressionList
+       (:expression
+        (:primaryExpression "\"challengePeriodDuration\""))))
+     ")")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "bytes32"))
+    "public"
+    "constant"
+    (:identifier "commitPeriodDurationKey")
+    "="
+    (:expression
+     (:expression (:primaryExpression (:identifier "sha3")))
+     "("
+     (:functionCallArguments
+      (:expressionList
+       (:expression
+        (:primaryExpression "\"commitPeriodDuration\""))))
+     ")")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "bytes32"))
+    "public"
+    "constant"
+    (:identifier "revealPeriodDurationKey")
+    "="
+    (:expression
+     (:expression (:primaryExpression (:identifier "sha3")))
+     "("
+     (:functionCallArguments
+      (:expressionList
+       (:expression
+        (:primaryExpression "\"revealPeriodDuration\""))))
+     ")")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "bytes32"))
+    "public"
+    "constant"
+    (:identifier "depositKey")
+    "="
+    (:expression
+     (:expression (:primaryExpression (:identifier "sha3")))
+     "("
+     (:functionCallArguments
+      (:expressionList
+       (:expression (:primaryExpression "\"deposit\""))))
+     ")")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "bytes32"))
+    "public"
+    "constant"
+    (:identifier "challengeDispensationKey")
+    "="
+    (:expression
+     (:expression (:primaryExpression (:identifier "sha3")))
+     "("
+     (:functionCallArguments
+      (:expressionList
+       (:expression
+        (:primaryExpression "\"challengeDispensation\""))))
+     ")")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "bytes32"))
+    "public"
+    "constant"
+    (:identifier "voteQuorumKey")
+    "="
+    (:expression
+     (:expression (:primaryExpression (:identifier "sha3")))
+     "("
+     (:functionCallArguments
+      (:expressionList
+       (:expression (:primaryExpression "\"voteQuorum\""))))
+     ")")
+    ";"))
+  (:contractPart
+   (:enumDefinition
+    "enum"
+    (:identifier "Status")
+    "{"
+    (:enumValue (:identifier "ChallengePeriod"))
+    ","
+    (:enumValue (:identifier "CommitPeriod"))
+    ","
+    (:enumValue (:identifier "RevealPeriod"))
+    ","
+    (:enumValue (:identifier "Blacklisted"))
+    ","
+    (:enumValue (:identifier "Whitelisted"))
+    "}"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "address"))
+    "public"
+    (:identifier "creator")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "uint"))
+    "public"
+    (:identifier "version")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "uint"))
+    "public"
+    (:identifier "deposit")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:elementaryTypeName "uint"))
+    "public"
+    (:identifier "challengePeriodEnd")
+    ";"))
+  (:contractPart
+   (:stateVariableDeclaration
+    (:typeName (:userDefinedTypeName (:identifier "Challenge")))
+    "public"
+    (:identifier "challenge")
+    ";"))
+  (:contractPart
+   (:structDefinition
+    "struct"
+    (:identifier "Challenge")
+    "{"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "address"))
+     (:identifier "challenger"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:userDefinedTypeName (:identifier "MiniMeToken")))
+     (:identifier "votingToken"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "voteQuorum"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "rewardPool"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "bytes"))
+     (:identifier "metaHash"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "commitPeriodEnd"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "revealPeriodEnd"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "votesFor"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "votesAgainst"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "claimedRewardOn"))
+    ";"
+    (:variableDeclaration
+     (:typeName
+      (:mapping
+       "mapping"
+       "("
+       (:elementaryTypeName "address")
+       "=>"
+       (:typeName (:userDefinedTypeName (:identifier "Vote")))
+       ")"))
+     (:identifier "vote"))
+    ";"
+    "}"))
+  (:contractPart
+   (:structDefinition
+    "struct"
+    (:identifier "Vote")
+    "{"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "bytes32"))
+     (:identifier "secretHash"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:userDefinedTypeName (:identifier "VoteOption")))
+     (:identifier "option"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "amount"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "revealedOn"))
+    ";"
+    (:variableDeclaration
+     (:typeName (:elementaryTypeName "uint"))
+     (:identifier "claimedRewardOn"))
+    ";"
+    "}"))
+  (:contractPart
+   (:enumDefinition
+    "enum"
+    (:identifier "VoteOption")
+    "{"
+    (:enumValue (:identifier "NoVote"))
+    ","
+    (:enumValue (:identifier "VoteFor"))
+    ","
+    (:enumValue (:identifier "VoteAgainst"))
+    "}"))
+  (:contractPart
+   (:modifierDefinition
+    "modifier"
+    (:identifier "notEmergency")
+    (:parameterList "(" ")")
+    (:block
+     "{"
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            "!"
+            (:expression
+             (:expression
+              (:expression
+               (:primaryExpression (:identifier "registry")))
+              "."
+              (:identifier "isEmergency"))
+             "("
+             (:functionCallArguments)
+             ")"))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression (:primaryExpression (:identifier "_")))
+        ";")))
+     "}")))
+  (:contractPart
+   (:modifierDefinition
+    "modifier"
+    (:identifier "onlyWhitelisted")
+    (:parameterList "(" ")")
+    (:block
+     "{"
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "isWhitelisted")))
+            "("
+            (:functionCallArguments)
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression (:primaryExpression (:identifier "_")))
+        ";")))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "construct")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_creator"))
+     ","
+     (:parameter
+      (:typeName (:elementaryTypeName "uint"))
+      (:identifier "_version"))
+     ")")
+    (:modifierList "public")
+    (:block
+     "{"
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "challengePeriodEnd")))
+            "=="
+            (:expression
+             (:primaryExpression (:numberLiteral "0"))))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "deposit")))
+         "="
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:expression
+              (:primaryExpression (:identifier "registry")))
+             "."
+             (:identifier "db"))
+            "("
+            (:functionCallArguments)
+            ")")
+           "."
+           (:identifier "getUIntValue"))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:primaryExpression (:identifier "depositKey")))))
+          ")"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:expression
+              (:primaryExpression (:identifier "registryToken")))
+             "."
+             (:identifier "transferFrom"))
+            "("
+            (:functionCallArguments
+             (:expressionList
+              (:expression
+               (:expression (:primaryExpression (:identifier "msg")))
+               "."
+               (:identifier "sender"))
+              ","
+              (:expression (:primaryExpression (:identifier "this")))
+              ","
+              (:expression
+               (:primaryExpression (:identifier "deposit")))))
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:primaryExpression (:identifier "challengePeriodEnd")))
+         "="
+         (:expression
+          (:expression
+           (:expression (:primaryExpression (:identifier "now")))
+           "."
+           (:identifier "add"))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:expression
+              (:expression
+               (:expression
+                (:expression
+                 (:primaryExpression (:identifier "registry")))
+                "."
+                (:identifier "db"))
+               "("
+               (:functionCallArguments)
+               ")")
+              "."
+              (:identifier "getUIntValue"))
+             "("
+             (:functionCallArguments
+              (:expressionList
+               (:expression
+                (:primaryExpression
+                 (:identifier "challengePeriodDurationKey")))))
+             ")")))
+          ")"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "creator")))
+         "="
+         (:expression (:primaryExpression (:identifier "_creator"))))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "version")))
+         "="
+         (:expression (:primaryExpression (:identifier "_version"))))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression (:primaryExpression (:identifier "registry")))
+          "."
+          (:identifier "fireRegistryEntryEvent"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression (:primaryExpression "\"constructed\""))
+           ","
+           (:expression
+            (:primaryExpression (:identifier "version")))))
+         ")")
+        ";")))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "createChallenge")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_challenger"))
+     ","
+     (:parameter
+      (:typeName (:elementaryTypeName "bytes"))
+      (:identifier "_challengeMetaHash"))
+     ")")
+    (:modifierList
+     "public"
+     (:modifierInvocation (:identifier "notEmergency")))
+    (:block
+     "{"
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:primaryExpression
+              (:identifier "isChallengePeriodActive")))
+            "("
+            (:functionCallArguments)
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            "!"
+            (:expression
+             (:expression
+              (:primaryExpression (:identifier "wasChallenged")))
+             "("
+             (:functionCallArguments)
+             ")"))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:expression
+              (:primaryExpression (:identifier "registryToken")))
+             "."
+             (:identifier "transferFrom"))
+            "("
+            (:functionCallArguments
+             (:expressionList
+              (:expression
+               (:primaryExpression (:identifier "_challenger")))
+              ","
+              (:expression (:primaryExpression (:identifier "this")))
+              ","
+              (:expression
+               (:primaryExpression (:identifier "deposit")))))
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "challenge)
+          "."
+          (:identifier "votingToken"))
+         "="
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "MiniMeToken")))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:expression
+              (:expression
+               (:primaryExpression (:identifier "registryToken")))
+              "."
+              (:identifier "createCloneToken"))
+             "("
+             (:functionCallArguments
+              (:expressionList
+               (:expression (:primaryExpression "\"\""))
+               ","
+               (:expression
+                (:primaryExpression (:numberLiteral "18")))
+               ","
+               (:expression (:primaryExpression "\"\""))
+               ","
+               (:expression
+                (:primaryExpression (:numberLiteral "0")))
+               ","
+               (:expression (:primaryExpression "true"))))
+             ")")))
+          ")"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "votingToken"))
+          "."
+          (:identifier "changeController"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:primaryExpression (:numberLiteral "0x0")))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "voteQuorum"))
+         "="
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:expression
+              (:primaryExpression (:identifier "registry")))
+             "."
+             (:identifier "db"))
+            "("
+            (:functionCallArguments)
+            ")")
+           "."
+           (:identifier "getUIntValue"))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:primaryExpression (:identifier "voteQuorumKey")))))
+          ")"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName (:elementaryTypeName "uint"))
+         (:identifier "commitDuration"))
+        "="
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "registry")))
+            "."
+            (:identifier "db"))
+           "("
+           (:functionCallArguments)
+           ")")
+          "."
+          (:identifier "getUIntValue"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:primaryExpression
+             (:identifier "commitPeriodDur(:expression
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "registry")))
+            "."
+            (:identifier "db"))
+           "("
+           (:functionCallArguments)
+           ")")
+          "."
+          (:identifier "getUIntValue"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:primaryExpression (:identifier "depositKey")))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "commitPeriodEnd"))
+         "="
+         (:expression
+          (:expression
+           (:expression (:primaryExpression (:identifier "now")))
+           "."
+           (:identifier "add"))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:primaryExpression (:identifier "commitDuration")))))
+          ")"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "revealPeriodEnd"))
+         "="
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "challenge")))
+            "."
+            (:identifier "commitPeriodEnd"))
+           "."
+           (:identifier "add"))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:primaryExpression (:identifier "revealDuration")))))
+          ")"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "rewardPool"))
+         "="
+         (:expression
+          (:expression
+           "("
+           (:expression
+            (:expression
+             (:expression
+              "("
+              (:expression
+               (:expression
+                (:primaryExpression (:numberLiteral "100")))
+               "-"
+               (:expression
+                (:expression
+                 (:expression
+                  (:expression
+                   (:expression
+                    (:primaryExpression (:identifier "registry")))
+                   "."
+                   (:identifier "db"))
+                  "("
+                  (:functionCallArguments)
+                  ")")
+                 "."
+                 (:identifier "getUIntValue"))
+                "("
+                (:functionCallArguments
+                 (:expressionList
+                  (:expression
+                   (:primaryExpression
+                    (:identifier "challengeDispensationK"("
+         (:functionCallArguments
+          (:expressionList
+           (:expression (:primaryExpression "\"challengeCreated\""))
+           ","
+           (:expression
+            (:primaryExpression (:identifier "version")))))
+         ")")
+        ";")))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "commitVote")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_voter"))
+     ","
+     (:parameter
+      (:typeName (:elementaryTypeName "bytes32"))
+      (:identifier "_secretHash"))
+     ")")
+    (:modifierList
+     "public"
+     (:modifierInvocation (:identifier "notEmergency")))
+    (:block
+     "{"
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:primaryExpression
+              (:identifier "isVoteCommitPeriodActive")))
+            "("
+            (:functionCallArguments)
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName (:elementaryTypeName "uint"))
+         (:identifier "amount"))
+        "="
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "votingToken"))
+          "."
+          (:identifier "balanceOf"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:primaryExpression (:identifier "_voter")))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression (:primaryExpression (:identifier "amount")))
+            ">"
+            (:expression
+             (:primaryExpression (:numberLiteral "0"))))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:expression
+              (:expression
+               (:primaryExpression (:identifier "challenge")))
+              "."
+              (:identifier "votingToken"))
+             "."
+             (:identifier "transferFrom"))
+            "("
+            (:functionCallArguments
+             (:expressionList
+              (:expression
+               (:primaryExpression (:identifier "_voter")))
+              ","
+              (:expression (:primaryExpression (:identifier "this")))
+              ","
+              (:expression
+               (:primaryExpression (:identifier "amount")))))
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "challenge")))
+            "."
+            (:identifier "vote"))
+           "["
+           (:expression (:primaryExpression (:identifier "_voter")))
+           "]")
+          "."
+          (:identifier "secretHash"))
+         "="
+         (:expression
+          (:primaryExpression (:identifier "_secretHash"))))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "challenge")))
+            "."
+            (:identifier "vote"))
+           "["
+           (:expression (:primaryExpression (:identifier "_voter")))
+           "]")
+          "."
+          (:identifier "amount"))
+         "="
+         (:expression (:primaryExpression (:identifier "amount"))))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName (:elementaryTypeName "var"))
+         (:identifier "eventData"))
+        "="
+        (:expression
+         (:expression
+          "new"
+          (:typeName
+           (:typeName (:elementaryTypeName "uint"))
+           "["
+           "]"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression (:primaryExpression (:numberLiteral "1")))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "eventData")))
+          "["
+          (:expression (:primaryExpression (:numberLiteral "0")))
+          "]")
+         "="
+         (:expression
+          (:expression
+           (:primaryExpression
+            (:elementaryTypeNameExpression
+             (:elementaryTypeName "uint"))))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:primaryExpression (:identifier "_voter")))))
+          ")"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression (:primaryExpression (:identifier "registry")))
+          "."
+          (:identifier "fireRegistryEntryEvent"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression (:primaryExpression "\"voteCommitted\""))
+           ","
+           (:expression (:primaryExpression (:identifier "version")))
+           ","
+           (:expression
+            (:primaryExpression (:identifier "eventData")))))
+         ")")
+        ";")))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "funct "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:expression (:primaryExpression (:identifier "sha3")))
+             "("
+             (:functionCallArguments
+              (:expressionList
+               (:expression
+                (:expression
+                 (:primaryExpression
+                  (:elementaryTypeNameExpression
+                   (:elementaryTypeName "uint"))))
+                "("
+                (:functionCallArguments
+                 (:expressionList
+                  (:expression
+                   (:primaryExpression
+                    (:identifier "_voteOption")))))
+                ")")
+               ","
+               (:expression
+                (:primaryExpression (:identifier "_salt")))))
+             ")")
+            "=="
+            (:expression
+             (:expression
+              (:expression
+               (:expression
+                (:primaryExpression (:identifier "cha")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "challenge")))
+            "."
+            (:identifier "vote"))
+           "["
+           (:expression
+            (:expression (:primaryExpression (:identifier "msg")))
+            "."
+            (:identifier "sender"))
+           "]")
+          "."
+          (:identifier "revealedOn"))
+         "="
+         (:expression (:primaryExpression (:identifier "now"))))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName (:elementaryTypeName "uint"))
+         (:identifier "amount"))
+        "="
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "vote"))
+          "["
+          (:expression
+           (:expression (:primaryExpression (:identifier "msg")))
+           "."
+           (:identifier "sender"))
+          "]")
+         "."
+         (:identifier "amount"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "challenge")))
+            "."
+            (:identifier "vote"))
+           "["
+           (:expression
+            (:expression (:primaryExpression (:identifier "msg")))
+            "."
+            (:identifier "sender"))
+           "]")
+          "."
+          (:identifier "option"))
+         "="
+         (:expression
+          (:primaryExpression (:identifier "_voteOption"))))
+        ";")))
+     (:statement
+      (:ifStatement
+       "if"
+       "("
+       (:expression
+        (:expression
+         (:primaryExpression (:identifier "_voteOption")))
+        "=="
+        (:expression
+         (:expression
+          (:primaryExpression (:identifier "VoteOption")))
+         "."
+         (:identifier "VoteFor")))
+       ")"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:simpleStatement
+           (:expressionStatement
+            (:expression
+             (:expression
+              (:expression
+               (:primaryExpression (:identifier "challenge")))
+              "."
+              (:identifier "votesFor"))
+             "="
+             (:expression
+              (:expression
+               (:expression
+                (:expression
+                 (:primaryExpression (:identifier "challenge")))
+                "."
+                (:identifier "votesFor"))
+               "."
+               (:identifier "add"))
+              "("
+              (:functionCallArguments
+               (:expressionList
+                (:expression
+                 (:primaryExpression (:identifier "amount")))))
+              ")"))
+            ";")))
+         "}"))
+       "else"
+       (:statement
+        (:ifStatement
+         "if"
+         "("
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "_voteOption")))
+          "=="
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "VoteOption")))
+           "."
+           (:identifier "VoteAgainst")))
+         ")"
+         (:statement
+          (:block
+           "{"
+           (:statement
+            (:simpleStatement
+             (:expressionStatement
+              (:expression
+               (:expression
+                (:expression
+                 (:primaryExpression (:identifier "challenge")))
+                "."
+                (:identifier "votesAgainst"))
+               "="
+               (:expression
+                (:expression
+                 (:expression
+                  (:expression
+                   (:primaryExpression (:identifier "challenge")))
+                  "."
+                  (:identifier "votesAg "uint"))
+           "["
+           "]"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression (:primaryExpression (:numberLiteral "1")))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "eventData")))
+          "["
+          (:expression (:primaryExpression (:numberLiteral "0")))
+          "]")
+         "="
+         (:expression
+          (:expression
+           (:primaryExpression
+            (:elementaryTypeNameExpression
+             (:elementaryTypeName "uint"))))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:expression (:primaryExpression (:identifier "msg")))
+             "."
+             (:identifier "sender"))))
+          ")"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression (:primaryExpression (:identifier "registry")))
+          "."
+          (:identifier "fireRegistryEntryEvent"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression (:primaryExpression "\"voteRevealed\""))
+           ","
+           (:expression (:primaryExpression (:identifier "version")))
+           ","
+           (:expression
+            (:primaryExpression (:identifier "eventData")))))
+         ")")
+        ";")))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "claimVoteReward")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_voter"))
+     ")")
+    (:modifierList
+     "public"
+     (:modifierInvocation (:identifier "notEmergency")))
+    (:block
+     "{"
+     (:statement
+      (:ifStatement
+       "if"
+       "("
+       (:expression
+        (:expression (:primaryExpression (:identifier "_voter")))
+        "=="
+        (:expression (:primaryExpression (:numberLiteral "0x0"))))
+       ")"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:simpleStatement
+           (:expressionStatement
+            (:expression
+             (:expression
+              (:primaryExpression (:identifier "_voter")))
+             "="
+             (:expression
+              (:expression (:primaryExpression (:identifier "msg")))
+              "."
+              (:identifier "sender")))
+            ";")))
+         "}"))))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:primaryExpression
+              (:identifier "isVoteRevealPeriodOver")))
+            "("
+            (:functionCallArguments)
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            "!"
+            (:expression
+             (:expression
+              (:primaryExpression
+               (:identifier "isVoteRewardClaimed")))
+             "("
+             (:functionCallArguments
+              (:expressionList
+               (:expression
+                (:primaryExpression (:identifier "_voter")))))
+             ")"))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "isVoteRevealed")))
+            "("
+            (:functionCallArguments
+             (:expressionList
+              (:expression
+               (:primaryExpression (:identifier "_voter")))))
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:primaryExpression
+              (:identifier "votedWinningVoteOption")))
+            "("
+            (:functionCallArguments
+             (:expressionList
+              (:expression
+               (:primaryExpression (:identifier "_voter")))))
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName (:elementaryTypeName "uint"))
+         (:identifier "reward"))
+        "="
+        (:expression
+         (:expression
+          (:primaryExpression (:identifier "voteRew"."
+             (:identifier "transfer"))
+            "("
+            (:functionCallArguments
+             (:expressionList
+              (:expression
+               (:primaryExpression (:identifier "_voter")))
+              ","
+              (:expression
+               (:primaryExpression (:identifier "reward")))))
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "challenge")))
+            "."
+            (:identifier "vote"))
+           "["
+           (:expression (:primaryExpression (:identifier "_voter")))
+           "]")
+          "."
+          (:identifier "claimedRewardOn"))
+         "="
+         (:expression (:primaryExpression (:identifier "now"))))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName (:elementaryTypeName "var"))
+         (:identifier "eventData"))
+        "="
+        (:expression
+         (:expression
+          "new"
+          (:typeName
+           (:typeName (:elementaryTypeName "uint"))
+           "["
+           "]"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression (:primaryExpression (:numberLiteral "1")))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "eventData")))
+          "["
+          (:expression (:primaryExpression (:numberLiteral "0")))
+          "]")
+         "="
+         (:expression
+          (:expression
+           (:primaryExpression
+            (:elementaryTypeNameExpression
+             (:elementaryTypeName "uint"))))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:primaryExpression (:identifier "_voter")))))
+          ")"))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression (:primaryExpression (:identifier "registry")))
+          "."
+          (:identifier "fireRegistryEntryEvent"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression (:primaryExpression "\"voteRewardClaimed\""))
+           ","
+           (:expression (:primaryExpression (:identifier "version")))
+           ","
+           (:expression
+            (:primaryExpression (:identifier "eventData")))))
+         ")")
+        ";")))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "claimChallengeReward")
+    (:parameterList "(" ")")
+    (:modifierList
+     "public"
+     (:modifierInvocation (:identifier "notEmergency")))
+    (:block
+     "{"
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:primaryExpression
+              (:identifier "isVoteRevealPeriodOver")))
+            "("
+            (:functionCallArguments)
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            "!"
+            (:expression
+             (:expression
+              (:primaryExpression
+               (:identifier "isChallengeRewardClaimed")))
+             "("
+             (:functionCallArguments)
+             ")"))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            "!"
+            (:expression
+             (:expression
+              (:primaryExpression
+               (:identifier "isWinningOptionVoteFor")))
+             "("
+             (:functionCallArguments)
+             ")"))))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression (:primaryExpression (:identifier "require")))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:expression
+             (:expression
+              (:primaryExpression (:identifier "registryToken")))
+             "."
+             (:identifier "transfer"))
+            "("
+            (:functionCallArguments
+             (:expressionList
+              (:expression
+               (:expression
+                (:primaryExpression (:identifier "challenge")))
+               "."
+               (:identifier "challenger"))
+              ","
+              (:expression
+               (:expression
+                (:primaryExpression (:identifier "challengeReward")))
+               "("
+               (:functionCallArguments)
+               ")")))
+            ")")))
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "claimedRewardOn"))
+         "="
+         (:expression (:primaryExpression (:identifier "now"))))
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:expressionStatement
+        (:expression
+         (:expression
+          (:expression (:primaryExpression (:identifier "registry")))
+          "."
+          (:identifier "fireRegistryEntryEvent"))
+         "("
+         (:functionCallArguments
+          (:expressionList
+           (:expression
+            (:primaryExpression "\"(:expression
+             (:expression (:primaryExpression (:identifier "this")))
+             "."
+             (:identifier "call"))
+            "("
+            (:functionCallArguments
+             (:expressionList
+              (:expression
+               (:primaryExpression (:identifier "_data")))))
+            ")")))
+         ")")
+        ";")))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "status")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter
+       (:typeName (:userDefinedTypeName (:identifier "Status"))))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:ifStatement
+       "if"
+       "("
+       (:expression
+        (:expression
+         (:expression
+          (:primaryExpression
+           (:identifier "isChallengePeriodActive")))
+         "("
+         (:functionCallArguments)
+         ")")
+        "&&"
+        (:expression
+         "!"
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "wasChallenged")))
+          "("
+          (:functionCallArguments)
+          ")")))
+       ")"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:returnStatement
+           "return"
+           (:expression
+            (:expression (:primaryExpression (:identifier "Status")))
+            "."
+            (:identifier "ChallengePeriod"))
+           ";"))
+         "}"))
+       "else"
+       (:statement
+        (:ifStatement
+         "if"
+         "("
+         (:expression
+          (:expression
+           (:primaryExpression
+            (:identifier "isVoteCommitPeriodActive")))
+          "("
+          (:functionCallArguments)
+          ")")
+         ")"
+         (:statement
+          (:block
+           "{"
+           (:statement
+            (:returnStatement
+             "return"
+             (:expression
+              (:expression
+               (:primaryExpression (:identifier "Status")))
+              "."
+              (:identifier "CommitPeriod"))
+             ";"))
+           "}"))
+         "else"
+         (:statement
+          (:ifStatement
+           "if"
+           "("
+           (:expression
+            (:expression
+             (:primaryExpression
+              (:identifier "isVoteRevealPeriodActive")))
+            "("
+            (:functionCallArguments)
+            ")")
+           ")"
+           (:statement
+            (:block
+             "{"
+             (:statement
+              (:returnStatement
+               "return"
+               (:expression
+                (:expression
+                 (:primaryExpression (:identifier "Status")))
+                "."
+                (:identifier "RevealPeriod"))
+               ";"))
+             "}"))
+           "else"
+           (:statement
+            (:ifStatement
+             "if"
+             "("
+             (:expression
+              (:expression
+               (:primaryExpression
+                (:identifier "isVoteRevealPeriodOver")))
+              "("
+              (:functionCallArguments)
+              ")")
+             ")"
+             (:statement
+              (:block
+               "{"
+               (:statement
+                (:ifStatement
+                 "if"
+                 "("
+                 (:expression
+                  (:expression
+                   (:primaryExpression
+                    (:identifier "isWinningOptionVoteFor")))
+                  "("
+                  (:functionCallArguments)
+                  ")")
+                 ")"
+                 (:statement
+                  (:block
+                   "{"
+                   (:statement
+                    (:returnStatement
+                     "return"
+                     (:expression
+                      (:expression
+                       (:primaryExpression (:identifier "Status")))
+                      "."
+                      (:identifier "Whitelisted"))
+                     ";"))
+                   "}"))
+                 "else"
+                 (:statement
+                  (:block
+                   "{"
+                   (:statement
+                    (:returnStatement
+                     "return"
+                     (:expression
+                      (:expression
+                       (:primaryExpression (:identifier "Status")))
+                      "."
+                      (:identifier "Blacklisted"))
+                     ";"))
+                   "}"))))
+               "}"))
+             "else"
+             (:statement
+              (:block
+               "{"
+               (:statement
+                (:returnStatement
+                 "return"
+                 (:expression
+                  (:expression
+                   (:primaryExpression (:identifier "Status")))
+                  "."
+                  (:identifier "Whitelisted"))
+                 ";"))
+               "}"))))))))))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "isChallengePeriodActive")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression (:primaryExpression (:identifier "now")))
+        "<="
+        (:expression
+         (:primaryExpression (:identifier "challengePeriodEnd"))))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "isWhitelisted")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression (:primaryExpression (:identifier "status")))
+         "("
+         (:functionCallArguments)
+         ")")
+        "=="
+        (:expression
+         (:expression (:primaryExpression (:identifier "Status")))
+         "."
+         (:identifier "Whitelisted")))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "isBlacklisted")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression (:primaryExpression (:identifier "status")))
+         "("
+         (:functionCallArguments)
+         ")")
+        "=="
+        (:expression
+         (:expression (:primaryExpression (:identifier "Status")))
+         "."
+         (:identifier "Blacklisted")))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "whitelistedOn")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:ifStatement
+       "if"
+       "("
+       (:expression
+        "!"
+        (:expression
+         (:expression
+          (:primaryExpression (:identifier "isWhitelisted")))
+         "("
+         (:functionCallArguments)
+         ")"))
+       ")"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:returnStatement
+           "return"
+           (:expression (:primaryExpression (:numberLiteral "0")))
+           ";"))
+         "}"))))
+     (:statement
+      (:ifStatement
+       "if"
+       "("
+       (:expression
+        (:expression
+         (:primaryExpression (:identifier "wasChallenged")))
+        "("
+        (:functionCallArguments)
+        ")")
+       ")"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:returnStatement
+           "return"
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "challenge")))
+            "."
+            (:identifier "revealPeriodEnd"))
+           ";"))
+         "}"))
+       "else"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:returnStatement
+           "return"
+           (:expression
+            (:primaryExpression (:identifier "challengePeriodEnd")))
+           ";"))
+         "}"))))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "wasChallenged")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression (:primaryExpression (:identifier "challenge")))
+         "."
+         (:identifier "challenger"))
+        "!="
+        (:expression (:primaryExpression (:numberLiteral "0x0"))))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "isVoteCommitPeriodActive")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression (:primaryExpression (:identifier "now")))
+        "<="
+        (:expression
+         (:expression (:primaryExpression (:identifier "challenge")))
+         "."
+         (:identifier "commitPeriodEnd")))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "isVoteRevealPeriodActive")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         "!"
+         (:expression
+          (:expression
+           (:primaryExpression
+            (:identifier "isVoteCommitPeriodActive")))
+          "("
+          (:functionCallArguments)
+          ")"))
+        "&&"
+        (:expression
+         (:expression (:primaryExpression (:identifier "now")))
+         "<="
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "revealPeriodEnd"))))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "isVoteRevealPeriodOver")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "revealPeriodEnd"))
+         ">"
+         (:expression (:primaryExpression (:numberLiteral "0"))))
+        "&&"
+        (:expression
+         (:expression (:primaryExpression (:identifier "now")))
+         ">"
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "revealPeriodEnd"))))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "isVoteRevealed")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_voter"))
+     ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "vote"))
+          "["
+          (:expression (:primaryExpression (:identifier "_voter")))
+          "]")
+         "."
+         (:identifier "revealedOn"))
+        ">"
+        (:expression (:primaryExpression (:numberLiteral "0"))))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "isVoteRewardClaimed")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_voter"))
+     ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "vote"))
+          "["
+          (:expression (:primaryExpression (:identifier "_voter")))
+          "]")
+         "."
+         (:identifier "claimedRewardOn"))
+        ">"
+        (:expression (:primaryExpression (:numberLiteral "0"))))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "isChallengeRewardClaimed")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression (:primaryExpression (:identifier "challenge")))
+         "."
+         (:identifier "claimedRewardOn"))
+        ">"
+        (:expression (:primaryExpression (:numberLiteral "0"))))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "winningVoteOption")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter
+       (:typeName (:userDefinedTypeName (:identifier "VoteOption"))))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:ifStatement
+       "if"
+       "("
+       (:expression
+        "!"
+        (:expression
+         (:expression
+          (:primaryExpression
+           (:identifier "isVoteRevealPeriodOver")))
+         "("
+         (:functionCallArguments)
+         ")"))
+       ")"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:returnStatement
+           "retu
+           (:expression
+            (:expression
+             (:expression
+              (:expression
+               (:primaryExpression (:identifier "challenge")))
+              "."
+              (:identifier "votesFor"))
+             "."
+             (:identifier "add"))
+            "("
+            (:functionCallArguments
+             (:expressionList
+              (:expression
+               (:expression
+                (:primaryExpression (:identifier "challenge")))
+               "."
+               (:identifier "votesAgainst"))))
+            ")")))
+         ")"))
+       ")"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:returnStatement
+           "return"
+           (:expression
+            (:expression
+             (:primaryExpression (:identifier "VoteOption")))
+            "."
+            (:identifier "VoteFor"))
+           ";"))
+         "}"))
+       "else"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:returnStatement
+           "r(:functionDefinition
+    "function"
+    (:identifier "winningVotesAmount")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName
+          (:userDefinedTypeName (:identifier "VoteOption")))
+         (:identifier "voteOption"))
+        "="
+        (:expression
+         (:expression
+          (:primaryExpression (:identifier "winningVoteOption")))
+         "("
+         (:functionCallArguments)
+         ")")
+        ";")))
+     (:statement
+      (:ifStatement
+       "if"
+       "("
+       (:expression
+        (:expression (:primaryExpression (:identifier "voteOption")))
+        "=="
+        (:expression
+         (:expression
+          (:primaryExpression (:identifier "VoteOption")))
+         " "votesAgainst"))
+             ";"))
+           "}"))
+         "else"
+         (:statement
+          (:block
+           "{"
+           (:statement
+            (:returnStatement
+             "return"
+             (:expression (:primaryExpression (:numberLiteral "0")))
+             ";"))
+           "}"))))))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "voteReward")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_voter"))
+     ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName (:elementaryTypeName "uint"))
+         (:identifier "winningAmount"))
+        "="
+        (:expression
+         (:expression
+          (:primaryExpression (:identifier "winningVotesAmount")))
+         "("
+         (:functionCallArguments)
+         ")")
+        ";")))
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName (:elementaryTypeName "uint"))
+         (:identifier "voterAmount"))
+        "="
+        (:expression (:primaryExpression (:numberLiteral "0")))
+        ";")))
+     (:statement
+      (:ifStatement
+       "if"
+       "("
+       (:expression
+        (:expression
+         (:primaryExpression (:identifier "votedWinningVoteOption")))
+        "("
+        (:functionCallArguments
+         (:expressionList
+          (:expression (:primaryExpression (:identifier "_voter")))))
+        ")")
+       ")"
+       (:statement
+        (:block
+         "{"
+         (:statement
+          (:simpleStatement
+           (:expressionStatement
+            (:expression
+             (:expression
+              (:primaryExpression (:identifier "voterAmount")))
+             "="
+             (:expression
+              (:expression
+               (:expression
+                (:expression
+                 (:primaryExpression (:identifier "challenge")))
+                "."
+                (:identifier "vote"))
+               "["
+               (:expression
+                (:primaryExpression (:identifier "_voter")))
+               "]")
+              "."
+              (:identifier "amount")))
+            ";")))
+         "}"))))
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         "("
+         (:expression
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "voterAmount")))
+           "."
+           (:identifier "mul"))
+          "("
+          (:functionCallArguments
+           (:expressionList
+            (:expression
+             (:expression
+              (:primaryExpression (:identifier "challenge")))
+             "."
+             (:identifier "rewardPool"))))
+          ")")
+         ")")
+        "/"
+        (:expression
+         (:primaryExpression (:identifier "winningAmount"))))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "challengeReward")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression (:primaryExpression (:identifier "deposit")))
+         "."
+         (:identifier "sub"))
+        "("
+        (:functionCallArguments
+         (:expressionList
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "rewardPool"))))
+        ")")
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "votedWinningVoteOption")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_voter"))
+     ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bool")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "vote"))
+          "["
+          (:expression (:primaryExpression (:identifier "_voter")))
+          "]")
+         "."
+         (:identifier "option"))
+        "=="
+        (:expression
+         (:expression
+          (:primaryExpression (:identifier "winningVoteOption")))
+         "("
+         (:functionCallArguments)
+         ")"))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "loadRegistryEntry")
+    (:parameterList "(" ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter
+       (:typeName (:userDefinedTypeName (:identifier "Status"))))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "address")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "address")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "address")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "bytes")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:primaryExpression
+         (:tupleExpression
+          "("
+          (:expression (:primaryExpression (:identifier "version")))
+          ","
+          (:expression
+           (:expression (:primaryExpression (:identifier "status")))
+           "("
+           (:functionCallArguments)
+           ")")
+          ","
+          (:expression (:primaryExpression (:identifier "creator")))
+          ","
+          (:expression (:primaryExpression (:identifier "deposit")))
+          ","
+          (:expression
+           (:primaryExpression (:identifier "challengePeriodEnd")))
+          ","
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "challenger"))
+          ","
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "votingToken"))
+          ","
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "rewardPool"))
+          ","
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "metaHash"))
+          ","
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "commitPeriodEnd"))
+          ","
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "revealPeriodEnd"))
+          ","
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "votesFor"))
+          ","
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "votesAgainst"))
+          ","
+          (:expression
+           (:expression
+            (:primaryExpression (:identifier "challenge")))
+           "."
+           (:identifier "claimedRewardOn"))
+          ")")))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "loadVote")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_voter"))
+     ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "bytes32")))
+      ","
+      (:parameter
+       (:typeName (:userDefinedTypeName (:identifier "VoteOption"))))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ","
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:simpleStatement
+       (:variableDeclarationStatement
+        (:variableDeclaration
+         (:typeName (:userDefinedTypeName (:identifier "Vote")))
+         (:identifier "vtr"))
+        "="
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "vote"))
+         "["
+         (:expression (:primaryExpression (:identifier "_voter")))
+         "]")
+        ";")))
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:primaryExpression
+         (:tupleExpression
+          "("
+          (:expression
+           (:expression (:primaryExpression (:identifier "vtr")))
+           "."
+           (:identifier "secretHash"))
+          ","
+          (:expression
+           (:expression (:primaryExpression (:identifier "vtr")))
+           "."
+           (:identifier "option"))
+          ","
+          (:expression
+           (:expression (:primaryExpression (:identifier "vtr")))
+           "."
+           (:identifier "amount"))
+          ","
+          (:expression
+           (:expression (:primaryExpression (:identifier "vtr")))
+           "."
+           (:identifier "revealedOn"))
+          ","
+          (:expression
+           (:expression (:primaryExpression (:identifier "vtr")))
+           "."
+           (:identifier "claimedRewardOn"))
+          ")")))
+       ";"))
+     "}")))
+  (:contractPart
+   (:functionDefinition
+    "function"
+    (:identifier "votingTokenBalanceOf")
+    (:parameterList
+     "("
+     (:parameter
+      (:typeName (:elementaryTypeName "address"))
+      (:identifier "_voter"))
+     ")")
+    (:modifierList "public" (:stateMutability "constant"))
+    (:returnParameters
+     "returns"
+     (:parameterList
+      "("
+      (:parameter (:typeName (:elementaryTypeName "uint")))
+      ")"))
+    (:block
+     "{"
+     (:statement
+      (:returnStatement
+       "return"
+       (:expression
+        (:expression
+         (:expression
+          (:expression
+           (:primaryExpression (:identifier "challenge")))
+          "."
+          (:identifier "votingToken"))
+         "."
+         (:identifier "balanceOf"))
+        "("
+        (:functionCallArguments
+         (:expressionList
+          (:expression (:primaryExpression (:identifier "_voter")))))
+        ")")
+       ";"))
+     "}")))
+  "}")
+ "<EOF>")
