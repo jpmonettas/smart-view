@@ -12,17 +12,6 @@
             [ike.cljj.stream :as stream])
   (:import java.io.File))
 
-(def projects-folder (atom nil))
-
-#_(def schema {:project/dependency {:db/valueType :db.type/ref
-                                  :db/cardinality :db.cardinality/many}
-             :namespace/project {:db/valueType :db.type/ref}
-             :feature/namespace {:db/valueType :db.type/ref}
-             :feature/project {:db/valueType :db.type/ref}
-             :spec/namespace {:db/valueType :db.type/ref}
-             :spec/project {:db/valueType :db.type/ref}
-               :smart-contract/project {:db/valueType :db.type/ref}})
-
 (def schema {:file/imports       {:db/cardinality :db.cardinality/many :db/valueType :db.type/ref}
              :file/contracts     {:db/cardinality :db.cardinality/many :db/valueType :db.type/ref}
              :contract/enums     {:db/cardinality :db.cardinality/many :db/valueType :db.type/ref}
@@ -153,6 +142,24 @@
         (into parameters-facts)
         (into (token-facts fid function)))))
 
+(defn contract-event-definition-facts [[_ & statements :as event]]
+  (let [ename (second (some #(when (= (first %) :identifier) %) statements))
+        eid (d/tempid :db.part/user)
+        plist (rest (some #(when (= (first %) :eventParameterList) %) statements))
+        parameters-facts (->> plist
+                              (keep (fn [[t & vs]]
+                                      (when (= t :eventParameter)
+                                        (let [[vtype vname] (parse-variable vs)
+                                              vid (d/tempid :db.part/user)]
+                                          [[eid :event/vars vid]
+                                           [vid :var/type vtype]
+                                           [vid :var/name (or vname "_UNNAMED_VAR")]]))))
+                              (reduce concat))]
+    (-> [[*current-contract-id* :contract/events eid]
+         [eid :event/name ename]]
+        (into parameters-facts)
+        (into (token-facts eid event)))))
+
 (defn contract-part-facts [[_ [part-type :as part]]]
   (case part-type
     :usingForDeclaration      (using-for-declaration-facts part)
@@ -161,6 +168,7 @@
     :structDefinition         (struct-definition-facts part)
     :modifierDefinition       (modifier-definition-facts part)
     :functionDefinition       (function-definition-facts part)
+    :eventDefinition          (contract-event-definition-facts part)
     (do (println "WARNING unmanaged contract part " part-type)
         [])))
 
@@ -198,24 +206,6 @@
           (into inherits-facts)
           (into (mapcat contract-part-facts contract-parts))))))
 
-(defn contract-event-definition-facts [[_ & statements :as event]]
-  (let [ename (second (some #(when (= (first %) :identifier) %) statements))
-        eid (d/tempid :db.part/user)
-        plist (rest (some #(when (= (first %) :eventParameterList) %) statements))
-        parameters-facts (->> plist
-                              (keep (fn [[t & vs]]
-                                      (when (= t :eventParameter)
-                                        (let [[vtype vname] (parse-variable vs)
-                                              vid (d/tempid :db.part/user)]
-                                          [[eid :event/vars vid]
-                                           [vid :var/type vtype]
-                                           [vid :var/name (or vname "_UNNAMED_VAR")]]))))
-                              (reduce concat))]
-    (-> [[*current-contract-id* :contract/events eid]
-         [eid :event/name ename]]
-        (into parameters-facts)
-        (into (token-facts eid event)))))
-
 (defn source-unit-facts [[_ & source-unit-childs]]
   (->> source-unit-childs
        (mapcat (fn [[node-id :as child]]
@@ -223,7 +213,6 @@
                    :pragmaDirective    (pragma-directive-facts child)
                    :importDirective    (import-directive-facts child)
                    :contractDefinition (contract-definition-facts child)
-                   :eventDefinition    (contract-event-definition-facts child)
                    (do (when (not= (str node-id) "<")
                          (println "WARNING unmanaged source unit directive " node-id))
                        []))))))
@@ -299,8 +288,8 @@
          [?fn-id :function/public? true]]
        @db-conn)
 
-  
-  (re-index-all "/home/jmonetta/my-projects/district0x/memefactory/resources/public/contracts/src/")
+
+  (re-index-all (.getAbsolutePath (io/file (io/resource "test-smart-contracts"))))
 
   
   (def contract "contract test {

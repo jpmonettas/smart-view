@@ -1,6 +1,8 @@
 (ns smart-view.core-test
-  (:require [smart-view.core :refer :all]
-            [clojure.test :as t :refer [deftest is use-fixtures]]))
+  (:require [clojure.java.io :as io]
+            [clojure.test :as t :refer [deftest is use-fixtures testing]]
+            [smart-view.core :refer :all]
+            [datascript.core :as d]))
 
 (use-fixtures :each (fn [f]
                       (reset! @#'datascript.core/last-tempid -1000000)
@@ -214,4 +216,23 @@
             [temp-id-3 :var/name "eventType"]
             [temp-id-1 :token/row 1]
             [temp-id-1 :token/column 1]]))))
+
+(deftest re-index-all-test
+  (re-index-all (.getAbsolutePath (io/file (io/resource "test-smart-contracts"))))
+  (let [all-fn-query '[:find ?file-name ?c-name ?fn-name
+                       :where
+                       [?file-id :file/name ?file-name]
+                       [?c-id :contract/name ?c-name]
+                       [?fn-id :function/name ?fn-name]
+                       [?file-id :file/contracts ?c-id]
+                       [?c-id :contract/functions ?fn-id]]]
+    (testing "Public functions count over test contracts should be correct"
+     (is (= (count (d/q (conj all-fn-query '[?fn-id :function/public? true]) @db-conn))
+            121)))
+    (testing "Private functions count over test contracts should be correct"
+     (is (= (count (d/q (conj all-fn-query '[?fn-id :function/public? false]) @db-conn))
+            78)))))
+
+
+  
 
