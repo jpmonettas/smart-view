@@ -6,9 +6,6 @@
             [datascript.core :as d]))
 
 
-;; (d/pull @db-conn '[:project/name {:project/dependency 6}] 2)
-;; (d/pull @db-conn '[:project/name :project/dependency] 1)
-
 (re-frame/reg-event-fx
  ::initialize-db
  (fn [_ _]
@@ -20,21 +17,10 @@
  (fn [cofxs [_]]
    {:http-xhrio {:method          :get
                  :uri             "http://localhost:3000/db"
-                 :timeout         8000                                           ;; optional see API docs
+                 :timeout         8000 ;; optional see API docs
                  :response-format (ajax/raw-response-format)  ;; IMPORTANT!: You must provide this.
                  :on-success      [::db-loaded]
                  :on-failure      [:bad-http-result]}}))
-
-(re-frame/reg-event-fx
- ::re-index-all
- (fn [cofxs [_]]
-   {:http-xhrio {:method          :get
-                 :uri             "http://localhost:3000/re-index-all"
-                 :timeout         8000                                           ;; optional see API docs
-                 :response-format (ajax/raw-response-format)  ;; IMPORTANT!: You must provide this.
-                 :on-success      [::reload-db]
-                 :on-failure      [:bad-http-result]}}))
-
 
 (re-frame/reg-event-db
  ::db-loaded
@@ -42,21 +28,15 @@
    (let [datascript-db (cljs.reader/read-string new-db)]
      (assoc db
             :datascript/db datascript-db
-            :selected-project-id (d/q '[:find ?pid .
-                                        :where
-                                        [?pid :project/name]
-                                        [?pid :project/ours?]]
-                                      datascript-db)))))
-
-(re-frame/reg-event-fx
- ::everything-re-indexed
- (fn [cofx [_ msg]]
-   (.log js/console msg)))
+            :selected-smart-contract-id (d/q '[:find ?c-id .
+                                               :where
+                                               [?c-id :contract/name]]
+                                             datascript-db)))))
 
 (re-frame/reg-event-db
- ::select-project
- (fn [db [_ pid]]
-   (assoc db :selected-project-id pid)))
+ ::select-smart-contract
+ (fn [db [_ cid]]
+   (assoc db :selected-smart-contract-id cid)))
 
 (re-frame/reg-event-db
  ::select-tab

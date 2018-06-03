@@ -20,7 +20,8 @@
                  [cljs-react-material-ui "0.2.48"]
                  [cljsjs/react-dom "15.6.1-1"]]
 
-  :plugins [[lein-cljsbuild "1.1.5"]]
+  :plugins [[lein-cljsbuild "1.1.5"]
+            [lein-garden "0.3.0"]]
 
   :min-lein-version "2.5.3"
 
@@ -43,6 +44,15 @@
 
     :plugins      [[lein-figwheel "0.5.13"]]}
    :prod { :dependencies [[day8.re-frame/tracing-stubs "0.5.0"]]}}
+
+  :garden {:builds [{:id "screen"
+                     :source-paths ["src/cljs"]
+                     :stylesheet smart-view.styles.core/main
+                     ;; Compiler flags passed to `garden.core/css`:
+                     :compiler {;; Where to save the file:
+                                :output-to "resources/public/css/main.css"
+                                ;; Compress the output?
+                                :pretty-print? false}}]}
 
   :cljsbuild
   {:builds

@@ -59,6 +59,12 @@
 (defn pragma-directive-facts [[_ _ _ [_ [_ [_ [_ version-op] version]]] :as pragma]]
   [[*current-file-id* :file/pragma-version (str version-op version)]])
 
+(defn parse-variable [statements]
+  (let [[_ [t v]] (some #(when (= (first %) :typeName) %) statements)
+        vtype (if (= t :elementaryTypeName) v (second v))
+        vname (second (some #(when (= (first %) :identifier) %) statements))]
+    [vtype vname]))
+
 (defn using-for-declaration-facts [[_ & statements :as using]]
   (let [[utype uname] (parse-variable statements)
         id (d/tempid :db.part/user)]
@@ -67,12 +73,6 @@
       [id :using/type uname]
       [id :using/for-type utype]]
      (token-facts id using))))
-
-(defn parse-variable [statements]
-  (let [[_ [t v]] (some #(when (= (first %) :typeName) %) statements)
-        vtype (if (= t :elementaryTypeName) v (second v))
-        vname (second (some #(when (= (first %) :identifier) %) statements))]
-    [vtype vname]))
 
 (defn state-variable-declaration-facts [[_ & statements :as state-var]]
   (let [[vtype vname] (parse-variable statements)
@@ -274,10 +274,7 @@
 
 (comment
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; All public functions ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+   ;; All public functions
   (d/q '[:find ?file-name ?c-name ?fn-name
          :where
          [?file-id :file/name ?file-name]
@@ -288,7 +285,23 @@
          [?fn-id :function/public? true]]
        @db-conn)
 
+  ;; Find contracts that doesn't inherits from any other contract
+  (d/q '[:find ?c-id ?c-name
+         :where
+         [?c-id :contract/name ?c-name]
+         [(missing? $ ?c-id :contract/inherits)]]
+       @db-conn)
 
+  ;; Pull contract inheritance hierarchy
+  (d/pull @db-conn [:db/id
+                    :contract/name
+                    {:contract/vars [:var/type :var/name :var/public?]}
+                    {:contract/functions [:function/name
+                                          :function/public?
+                                          {:function/vars [:var/type :var/name :var/parameter?]}]}
+                    {:contract/inherits 6}] 62)
+
+  
   (re-index-all (.getAbsolutePath (io/file (io/resource "test-smart-contracts"))))
 
   
