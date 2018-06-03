@@ -7,15 +7,15 @@ Visualize and explore your solidity smart contracts.
 Before anything install:
 
 - Java
-- [Leiningen] (https://leiningen.org/)
+- [Leiningen](https://leiningen.org/)
 
-Now run:
+Now clone the repo and run :
 
 ```bash
 $ lein uberjar
 ```
 
-A smart-view.jar file should be now generated under target folder.
+You should find smart-view.jar file under target folder now.
 
 # Run 
 
@@ -31,11 +31,11 @@ Now open http://localhost:3000
 
 # How does it works?
 
-- It walks over every solidity file i full-path-to-solidity-files-folder
-- Analize parse it's contents using [antlr4](https://github.com/antlr/antlr4) and this [grammar](https://github.com/solidityj/solidity-antlr4)
-- From the AST generates a bunch of facts inside a [datascript](https://github.com/tonsky/datascript/) database (functions, vars, enums, structs, events ...)
-- Serializes the database and send it to a SPA for querying facts in different ways and generate visualizations
+- It walks over every solidity file inside full-path-to-solidity-files-folder
+- Parses it's contents using [antlr4](https://github.com/antlr/antlr4) and this [grammar](https://github.com/solidityj/solidity-antlr4)
+- From the AST, generates a bunch of facts inside a [datascript](https://github.com/tonsky/datascript/) database (functions, vars, enums, structs, events ...)
+- Serializes the database, and sends it to a SPA for querying facts and generate visualizations
 
 # Roadmap
 
-Since you end up with a database in the browser full of facts about your smart contracts, lots of querys and visualizations can be derived.
+Since you end up with a database inside the browser full of facts about your smart contracts, lots of querys and visualizations can be derived.
