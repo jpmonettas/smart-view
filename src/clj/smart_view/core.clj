@@ -53,7 +53,7 @@
   (let [id (d/tempid :db.part/user)]
     (into
      [[*current-file-id* :file/imports id]
-      [id :import/name (second (re-find #"\"(.*)\"" file))]]
+      [id :import/name (second (re-find #"[\"']\.?/?(.*)[\"']" file))]]
      (token-facts id import))))
 
 (defn pragma-directive-facts [[_ _ _ [_ [_ [_ [_ version-op] version]]] :as pragma]]
@@ -71,7 +71,7 @@
     (into
      [[*current-contract-id* :contract/usings id]
       [id :using/type uname]
-      [id :using/for-type utype]]
+      [id :using/for-type (or utype "*")]]
      (token-facts id using))))
 
 (defn state-variable-declaration-facts [[_ & statements :as state-var]]
@@ -257,6 +257,11 @@
                           (mapv (fn [[e a v]] [:db/add e a v])))]
            (prn "Transacting second pass for file" full-path "facts :" facts)
            (d/transact! db-conn facts)))))))
+
+
+#_(re-index-all "/home/jmonetta/my-projects/district0x/ethlance/resources/public/contracts/src")
+#_(re-index-all "/home/jmonetta/my-projects/district0x/name-bazaar/resources/public/contracts/src/")
+#_(def re-contract (slurp "/home/jmonetta/my-projects/district0x/name-bazaar/resources/public/contracts/src/ens/TestRegistrar.sol"))
 
 #_(def re-contract (slurp "/home/jmonetta/my-projects/district0x/memefactory/resources/public/contracts/src/Registry.sol"))
 #_(def parsed (let [parsed-contract (parse-solidity re-contract)]

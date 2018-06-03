@@ -39,3 +39,5 @@ Now open http://localhost:3000
 # Roadmap
 
 Since you end up with a database inside the browser full of facts about your smart contracts, lots of querys and visualizations can be derived.
+
+- Add support for `library`

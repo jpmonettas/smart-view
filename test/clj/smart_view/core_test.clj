@@ -2,7 +2,8 @@
   (:require [clojure.java.io :as io]
             [clojure.test :as t :refer [deftest is use-fixtures testing]]
             [smart-view.core :refer :all]
-            [datascript.core :as d]))
+            [datascript.core :as d]
+            [smart-view.core :as sut]))
 
 (use-fixtures :each (fn [f]
                       (reset! @#'datascript.core/last-tempid -1000000)
@@ -20,7 +21,14 @@
            [[-1 :file/imports temp-id-1]
             [temp-id-1 :import/name "math/SafeMath.sol"]
             [temp-id-1 :token/row 1]
-            [temp-id-1 :token/column 1]]))))
+            [temp-id-1 :token/column 1]]))
+    (is (= (import-directive-facts (with-meta 
+                                     '(:importDirective "import" "'./AbstractENS.sol'" ";")
+                                     {:clj-antlr/position {:row 1 :column 1}}))
+           [[-1 :file/imports temp-id-2]
+            [temp-id-2 :import/name "AbstractENS.sol"]
+            [temp-id-2 :token/row 1]
+            [temp-id-2 :token/column 1]]))))
 
 (deftest pragma-directive-facts-test
  (binding [sut/*current-file-id* -1]
