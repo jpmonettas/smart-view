@@ -14,7 +14,7 @@
                        (str/split-lines)
                        (map-indexed (fn [lnumber l]
                                       (if (= (inc lnumber) line)
-                                        (str "<b id=\"line-tag\" style=\"background-color:yellow\">" l "</b>\n")
+                                        (str "<b id=\"line-tag\" style=\"background-color:#e91e31\">" l "</b>\n")
                                         (str l "\n"))))
                        (apply str))
                   (slurp path))]

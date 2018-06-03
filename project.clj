@@ -46,7 +46,7 @@
    :prod { :dependencies [[day8.re-frame/tracing-stubs "0.5.0"]]}}
 
   :garden {:builds [{:id "screen"
-                     :source-paths ["src/cljs"]
+                     :source-paths ["src/styles"]
                      :stylesheet smart-view.styles.core/main
                      ;; Compiler flags passed to `garden.core/css`:
                      :compiler {;; Where to save the file:

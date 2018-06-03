@@ -31,6 +31,34 @@
      [])))
 
 (re-frame/reg-sub
+ ::all-smart-contracts-tree
+ (fn [{:keys [:datascript/db]} _]
+   (when db
+     (let [all-root-ids  (d/q '[:find ?c-id
+                                :where
+                                [?c-id :contract/name ?c-name]
+                                [(missing? $ ?c-id :contract/inherits)]]
+                              db)
+           all-contracts (map (fn [[cid]]
+                                (d/pull db '[:db/id
+                                             :contract/name
+                                             :token/row
+                                             {:file/_contracts [:file/name :file/full-path]}
+                                             {:contract/vars [:var/type :var/name :var/public? :token/row]}
+                                             {:contract/functions [:function/name
+                                                                   :token/row
+                                                                   :function/public?
+                                                                   {:function/vars [:var/type :var/name :var/parameter?]}]}
+                                             {:contract/events [:event/name
+                                                                :token/row
+                                                                {:event/vars [:var/type :var/name :var/parameter?]}]}
+                                             {:contract/_inherits 10}]
+                                        cid))
+                              all-root-ids)]
+       {:contract/_inherits all-contracts
+        :contract/name "_ROOT"}))))
+
+(re-frame/reg-sub
  ::selected-smart-contract-id
  (fn [{:keys [:selected-smart-contract-id]} _]
    selected-smart-contract-id))
@@ -40,3 +68,7 @@
  (fn [{:keys [:selected-tab-id]} _]
    selected-tab-id))
 
+(re-frame/reg-sub
+ :zoom
+ (fn [db]
+   (:zoom db)))

@@ -218,7 +218,9 @@
                        []))))))
 
 (defn solidity-file-simple-facts [{:keys [relative-path full-path]}]
-  (let [file-facts [[(d/tempid :db.part/user) :file/name relative-path]]
+  (let [file-id (d/tempid :db.part/user)
+        file-facts [[file-id :file/name relative-path]
+                    [file-id :file/full-path full-path]]
         [_ & statements] (parse-solidity (slurp full-path))
         contract-facts (->> statements
                             (keep (fn [[t & r]]
@@ -301,6 +303,18 @@
                                           {:function/vars [:var/type :var/name :var/parameter?]}]}
                     {:contract/inherits 6}] 62)
 
+  ;; Pull contract inheritance backwards
+  (d/pull @db-conn
+          [:db/id
+           :contract/name
+           {:contract/vars [:var/type :var/name :var/public?]}
+           {:contract/functions [:function/name
+                                 :function/public?
+                                 {:function/vars [:var/type :var/name :var/parameter?]}]}
+           {:contract/_inherits 6}]
+          14)
+
+  
   
   (re-index-all (.getAbsolutePath (io/file (io/resource "test-smart-contracts"))))
 

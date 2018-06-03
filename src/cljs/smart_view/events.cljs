@@ -44,3 +44,14 @@
    (assoc db :selected-tab-id tid)))
 
 
+(re-frame/reg-event-db
+ :zoom-in
+ (fn  [db _]
+   (update db :zoom #(+ % 0.02))))
+
+(re-frame/reg-event-db
+ :zoom-out
+ (fn  [db _]
+   (if (< 0 (:zoom db))
+     (update db :zoom #(- % 0.02))
+     db)))
