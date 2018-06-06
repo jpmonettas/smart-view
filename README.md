@@ -43,7 +43,7 @@ Red items means private while green ones means public.
 # How does it works?
 
 - It walks over every solidity file inside full-path-to-solidity-files-folder
-- Parses it's contents using [antlr4](https://github.com/antlr/antlr4) and this [grammar](https://github.com/solidityj/solidity-antlr4)
+- Parses its contents using [antlr4](https://github.com/antlr/antlr4) and this [grammar](https://github.com/solidityj/solidity-antlr4)
 - From the AST, generates a bunch of facts inside a [datascript](https://github.com/tonsky/datascript/) database (functions, vars, enums, structs, events ...)
 - Serializes the database, and sends it to a SPA for querying facts and generate visualizations
 
