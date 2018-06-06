@@ -27,7 +27,18 @@ Now open http://localhost:3000
 
 # How does it looks?
 
-<img src="/docs/contracts-map-1.png?raw=true"/>
+The simplest view shows just contracts hierarchy.
+
+<img src="/docs/contracts-map-empty.png?raw=true"/>
+
+You can use the controls on the left to enable vars, functions and events.
+
+<img src="/docs/contracts-map-menu.png?raw=true"/>
+
+Red items means private while green ones means public.
+
+<img src="/docs/contracts-map-all.png?raw=true"/>
+
 
 # How does it works?
 

@@ -329,5 +329,33 @@
         function f() {}
     }")
 
+  (require '[clj-antlr.interpreted :as i])
+  (require '[clj-antlr.static :as as])
+  (require '[clj-antlr.common :as ac])
+  (require '[clj-antlr.proto :as proto])
+  (ac/tokens lexer)
+  (def lexer (i/lexer-interpreter (i/grammar "/home/jmonetta/tmp/LessLexer.g4")))
+  (def parser (i/parser-interpreter (i/grammar "/home/jmonetta/tmp/LessParser.g4") lexer))
+  ((antlr/parser "/home/jmonetta/tmp/Less.g4") "/home/jmonetta/tmp/simple.less")
+  ((antlr/parser "/home/jmonetta/tmp/combined-less-2.g4") "/home/jmonetta/tmp/simple.less")
+  ((antlr/parser "/home/jmonetta/my-projects/smart-view/resources/grammars/Less.g4") "/home/jmonetta/tmp/simple.less")
+
+  (in-ns 'clj-antlr.interpreted)
+  (require '[clj-antlr.core :refer :all])
+  (defn singlethreaded-parser
+    "Creates a new single-threaded parser for a grammar."
+    ([^Grammar lexerGrammar ^Grammar parserGrammar]
+     (let [^Lexer lexer (.createLexerInterpreter lexerGrammar (common/input-stream ""))
+           parser       (.createParserInterpreter parserGrammar (common/tokens lexer))]
+       (SinglethreadedParser. grammar lexer parser)))
+    ([^Grammar grammar]
+     (let [^Lexer lexer (.createLexerInterpreter grammar (common/input-stream ""))
+           parser       (.createParserInterpreter grammar (common/tokens lexer))]
+       (SinglethreadedParser. grammar lexer parser))))
+
+  (proto/parse (ParserWrapper. (interpreted/singlethreaded-parser (interpreted/grammar "/home/jmonetta/my-projects/smart-view/resources/grammars/LessLexer.g4")
+                                                            (interpreted/grammar "/home/jmonetta/my-projects/smart-view/resources/grammars/LessParser.g4")) 
+                                       {})
+               (slurp "/home/jmonetta/tmp/simple.less"))
   )
 

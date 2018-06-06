@@ -55,3 +55,8 @@
    (if (< 0 (:zoom db))
      (update db :zoom #(- % 0.02))
      db)))
+
+(re-frame/reg-event-db
+ :contracts-map/set-control
+ (fn [db [_ control v?]]
+   (assoc-in db [:contracts-map/controls control] v?)))

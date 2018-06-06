@@ -72,3 +72,8 @@
  :zoom
  (fn [db]
    (:zoom db)))
+
+(re-frame/reg-sub
+ :contracts-map/controls
+ (fn [db]
+   (:contracts-map/controls db)))
