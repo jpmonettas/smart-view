@@ -104,7 +104,7 @@
              c @controls]
          [:div.smart-contract-explorer {:style {:margin 10}}
           [:div {:style {:overflow :scroll
-                         :height 1000 
+                         :height 2000 
                          :width "100%"}} 
            [:div.tree-panel #_{:style {:transform (str "scale(" @zoom ")")}}
             (when-let [t @tree]

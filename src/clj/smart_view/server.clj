@@ -6,6 +6,6 @@
   (:gen-class))
 
 (defn -main [& [folder]]
-  (let [port (Integer/parseInt (or (env :port) "3000"))]
+  (let [port (Integer/parseInt (or (env :port) "3001"))]
     (core/re-index-all folder)
     (run-jetty handler {:port port :join? false})))
