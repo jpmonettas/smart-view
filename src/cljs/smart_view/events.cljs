@@ -16,7 +16,7 @@
  ::reload-db
  (fn [cofxs [_]]
    {:http-xhrio {:method          :get
-                 :uri             "http://localhost:3000/db"
+                 :uri             "http://localhost:3001/db"
                  :timeout         8000 ;; optional see API docs
                  :response-format (ajax/raw-response-format)  ;; IMPORTANT!: You must provide this.
                  :on-success      [::db-loaded]

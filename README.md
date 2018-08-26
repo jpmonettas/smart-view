@@ -23,7 +23,7 @@ You should find smart-view.jar file under target folder now.
 $ java -jar ./target/smart-view.jar full-path-to-solidity-files-folder
 ```
 
-Now open http://localhost:3000
+Now open http://localhost:3001
 
 # How does it looks?
 

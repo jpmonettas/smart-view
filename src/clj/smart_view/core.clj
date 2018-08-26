@@ -244,7 +244,6 @@
      (doseq [fpath all-files]
        (let [facts (->> (solidity-file-simple-facts fpath)
                         (mapv (fn [[e a v]] [:db/add e a v])))]
-         (prn "Transacting first pass for file" (:full-path fpath) "facts :" facts)
          (d/transact! db-conn facts)))
 
      ;; Second pass, transact every fact
@@ -255,7 +254,6 @@
                           parse-solidity
                           source-unit-facts
                           (mapv (fn [[e a v]] [:db/add e a v])))]
-           (prn "Transacting second pass for file" full-path "facts :" facts)
            (d/transact! db-conn facts)))))))
 
 

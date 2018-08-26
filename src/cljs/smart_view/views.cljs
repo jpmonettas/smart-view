@@ -33,8 +33,8 @@
   (if (= (:contract/name n) "_ROOT")
     [:div {:dangerouslySetInnerHTML {:__html "&#x25FC;"}}]
     (let [file-full-path (-> n :file/_contracts first :file/full-path)]
-     [:div.contract-node {}
-      (link {:path file-full-path
+      [:div.contract-node {}
+       (link {:path file-full-path
              :line (inc (:token/row n))}
             [:span.contract-header (str (:contract/name n) " @ " (-> n :file/_contracts first :file/name))])
       (when show-vars?
@@ -74,7 +74,8 @@
 
 (defn explorer-one []
   (let [selected-smart-contract-id @(re-frame/subscribe [::subs/selected-smart-contract-id])
-        tree (re-frame/subscribe [::subs/inheritance-tree])]
+        tree (re-frame/subscribe [::subs/inheritance-tree])
+        controls (re-frame/subscribe [:contracts-map/controls])]
     [:div.inheritance-explorer {:style {:margin 10}}
      [all-contracts
       :on-change #(re-frame/dispatch [::events/select-smart-contract %])
@@ -88,7 +89,7 @@
          :childs-fn :contract/inherits
          :line-styles {:stroke-width 2
                        :stroke (color :pink500)}
-         :render-fn render-contract-node])]]))
+         :render-fn #(render-contract-node @controls %)])]]))
 
 (defn contracts-map []
   (let [controls (re-frame/subscribe [:contracts-map/controls])]
